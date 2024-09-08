@@ -6,7 +6,7 @@ import { BackgroundCircles, BottomLine, Gradient } from "./design/Hero";
 import { heroIcons } from "../constants";
 import { ScrollParallax } from "react-just-parallax";
 import { Suspense, useRef } from "react";
-import ThreeDCar from '../ThreeDComponents/ThreeDcar';
+import ThreeDCar from '../ThreeDComponents/ThreeDCar';
 
 import CompanyLogos from "./CompanyLogos";
 
