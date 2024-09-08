@@ -1,0 +1,46 @@
+# Node modules
+backend/node_modules/
+backend/config.env
+client/node_modules/
+client/.env
+
+
+# Build outputs
+backend/dist/
+backend/build/
+client/dist/
+client/build/
+
+# Vite cache
+client/.vite/
+
+# Environment variables
+backend/.env
+backend/.env.local
+client/.env
+client/.env.local
+
+# Logs
+*.log
+backend/logs/
+client/logs/
+
+# IDE or editor specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Cache and dependency directories
+.pnp/
+.pnp.js
+npm/
+yarn/
+
+# Local project files
+*.local
+*.pid
