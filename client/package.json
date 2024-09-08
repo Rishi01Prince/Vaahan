@@ -8,7 +8,6 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "build": "vite build --logLevel=error"
-
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -24,7 +23,8 @@
     "react-dom": "^18.2.0",
     "react-just-parallax": "^3.1.16",
     "react-router-dom": "^6.22.1",
-    "scroll-lock": "^2.1.5"
+    "scroll-lock": "^2.1.5",
+    "three": "^0.168.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.55",
