@@ -34,7 +34,7 @@ export default function VehicleGallery() {
 
   const handleFetchLocation = () => {
     alert('Fetching live location...');
-   
+    // Add your logic to fetch live location if needed
   };
 
   const filteredVehicles = vehicles.filter(
