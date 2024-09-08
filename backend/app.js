@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const db = require('./db');
 const morgan = require('morgan');
-const cors = require("cors");
+// const cors = require("cors");
 
 const cookieSession = require("cookie-session");
 
@@ -20,13 +20,13 @@ app.use(
 );
 
 
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: process.env.CLIENT_URL,
+//     methods: "GET,POST,PUT,DELETE",
+//     credentials: true,
+//   })
+// );
 
 app.use('/', routes); 
 
