@@ -2,7 +2,7 @@
 
 Vaahan is a user-friendly web application designed for scooter, bike, and car rentals on an hourly or daily basis. This project utilizes the MERN (MongoDB, Express, React, Node.js) stack to provide a seamless rental experience for customers and includes enhanced features for improved functionality.
 
-
+### Note : Some features may be temporarily unavailable as we update the system. Thank you for your patience!
 
 ## Features
 
