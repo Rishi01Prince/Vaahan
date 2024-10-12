@@ -40,6 +40,12 @@ const Header = () => {
     setOpenNavigation(false);
   };
 
+  // Close the navigation menu after clicking a link
+  const closeMenuOnLinkClick = () => {
+    setOpenNavigation(false);
+    enablePageScroll();
+  };
+
   return (
     <div
       className={`mb-2 w-full z-50 border-b border-n-6 lg:bg-n-8/90 lg:backdrop-blur-sm ${
@@ -66,6 +72,7 @@ const Header = () => {
                   : "lg:text-n-1/50"
               } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
               to="/"
+              onClick={closeMenuOnLinkClick} // Close menu on click
             >
               Home
             </Link>
@@ -77,6 +84,7 @@ const Header = () => {
                   : "lg:text-n-1/50"
               } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
               to="/rentnow"
+              onClick={closeMenuOnLinkClick} // Close menu on click
             >
               Rent Now
             </Link>
@@ -88,6 +96,7 @@ const Header = () => {
                   : "lg:text-n-1/50"
               } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
               to="/yourvehicles"
+              onClick={closeMenuOnLinkClick} // Close menu on click
             >
               Your Vehicles
             </Link>
@@ -99,6 +108,7 @@ const Header = () => {
                   : "lg:text-n-1/50"
               } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
               to="/aboutus"
+              onClick={closeMenuOnLinkClick} // Close menu on click
             >
               About Us
             </Link>
@@ -110,6 +120,7 @@ const Header = () => {
                   : "lg:text-n-1/50"
               } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
               to="/contactus"
+              onClick={closeMenuOnLinkClick} // Close menu on click
             >
               Contact Us
             </Link>
@@ -117,19 +128,19 @@ const Header = () => {
             {/* Authentication Section for Mobile View */}
             {(!localStorage.getItem("authToken")) ? (
               <div className="flex flex-col items-center space-y-4 lg:hidden">
-                <Button>
+                <Button onClick={closeMenuOnLinkClick}>
                   <Link to="/signup">Sign Up</Link>
                 </Button>
-                <Button>
+                <Button onClick={closeMenuOnLinkClick}>
                   <Link to="/login">Sign in</Link>
                 </Button>
               </div>
             ) : (
               <div className="flex flex-col items-center space-y-4 lg:hidden">
-                <Button>
+                <Button onClick={closeMenuOnLinkClick}>
                   <Link to="/myorder">My Orders</Link>
                 </Button>
-                <Button onClick={() => setCartView(true)}>
+                <Button onClick={() => { setCartView(true); closeMenuOnLinkClick(); }}>
                   <ShoppingCart size={18} className="mr-1" />
                   <span className="ml-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {data !== undefined && data.length > 0 ? data.length : 0}
@@ -140,7 +151,7 @@ const Header = () => {
                     <Cart />
                   </Modal>
                 ) : null}
-                <Button onClick={handleLogout}>Logout</Button>
+                <Button onClick={() => { handleLogout(); closeMenuOnLinkClick(); }}>Logout</Button>
               </div>
             )}
           </div>
