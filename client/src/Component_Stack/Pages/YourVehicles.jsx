@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardContent } from '@mui/material';
 import { useNavigate , Link} from 'react-router-dom';
-import VehicleCard from '../components/VehicleCard';
+import VehicleCard from '../Cards/VehicleCard';
 import { MapPin } from 'lucide-react';
 
 const fetchUserVehicles = async (currentUserEmail) => {

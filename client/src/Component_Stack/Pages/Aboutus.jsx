@@ -1,4 +1,4 @@
-import rishi from "../assets/profiles/rishiprofile.png";
+import rishi from "../../assets/profiles/rishiprofile.png";
 
 export default function AboutUs() {
   const developer = {
@@ -8,7 +8,7 @@ export default function AboutUs() {
   }
 
   return (
-    <div className="bg-gray-900 text-gray-100 py-12 px-4 sm:py-16 sm:px-6 lg:py-20 lg:px-8 mt-10">
+    <div className="bg-n-8/90  text-gray-100 py-12 px-4 sm:py-16 sm:px-6 lg:py-20 lg:px-8 mt-10">
       <div className="max-w-4xl mx-auto">
         <div className="text-center">
           <h1 className="text-3xl font-extrabold text-white sm:text-4xl lg:text-5xl">

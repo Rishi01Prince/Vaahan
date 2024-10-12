@@ -1,14 +1,14 @@
-import { curve, heroBackground } from "../assets";
+import { curve, heroBackground } from "../../assets";
 import {Link} from  "react-router-dom";
-import Button from "./Button";
-import Section from "./Section";
+import Button from "../../components/Button";
+import Section from "../../components/Section";
 import { BackgroundCircles, BottomLine, Gradient } from "./design/Hero";
-import { heroIcons } from "../constants";
+import { heroIcons } from "../../constants";
 import { ScrollParallax } from "react-just-parallax";
 import { Suspense, useRef } from "react";
 import ThreeDCar from '../ThreeDComponents/ThreeDCar';
 
-import CompanyLogos from "./CompanyLogos";
+import CompanyLogos from "../../components/CompanyLogos";
 
 const Hero = () => {
   const parallaxRef = useRef(null);
@@ -24,7 +24,7 @@ const Hero = () => {
       <div className="container relative" ref={parallaxRef}>
         <div className="relative z-1 max-w-[62rem] mx-auto text-center mb-[3.875rem] md:mb-20 lg:mb-[1rem]">
           <h1 className="h1 mb-6">
-            Explore the Possibilities of&nbsp;Vechicles on&nbsp; {` `}
+            Explore &nbsp;Vechicles on&nbsp; {` `}
             <span className="inline-block relative">
               Vaahan{" "}
               <img

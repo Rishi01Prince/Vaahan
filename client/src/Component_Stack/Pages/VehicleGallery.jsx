@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardContent, TextField, MenuItem, Select, Button } from '@mui/material';
 import { MapPin } from 'lucide-react';
-import VehicleCard from '../components/VehicleCard';
+import VehicleCard from '../Cards/VehicleCard';
 
 const fetchVehicles = async () => {
   try {
