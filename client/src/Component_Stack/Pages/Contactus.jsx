@@ -21,7 +21,7 @@ export default function ContactUs() {
   }
 
   return (
-    <div className="bg-black min-h-screen text-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
+    <div className="bg-n-8/90  min-h-screen text-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
       <div className="max-w-7xl mx-auto">
         <div className="text-center">
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">

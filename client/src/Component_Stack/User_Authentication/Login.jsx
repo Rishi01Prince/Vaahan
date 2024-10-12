@@ -44,7 +44,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center px-4 py-10 sm:px-6 lg:px-8 mt-10">
+    <div className="min-h-screen bg-gradient-to-br bg-n-8/90  to-gray-800 flex items-center justify-center px-4 py-10 sm:px-6 lg:px-8 mt-10">
       <div className="max-w-md w-full bg-gray-800 bg-opacity-90 backdrop-blur-md rounded-lg shadow-xl p-8">
         <h2 className="text-3xl font-extrabold text-center text-white mb-6">Login to your account</h2>
         {errorMessage && (

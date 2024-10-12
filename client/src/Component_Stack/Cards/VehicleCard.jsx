@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { MapPin, User, Phone, Clock } from 'lucide-react';
-import { useCart, useDispatchCart } from './ContextReducer';
+import { useCart, useDispatchCart } from '../../components/ContextReducer';
 
 export default function VehicleCard({
   imageUrl,

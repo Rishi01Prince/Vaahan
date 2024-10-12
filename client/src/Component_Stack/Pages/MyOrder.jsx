@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './MyOrder.css';
 
 export default function MyOrder() {
   const [orderData, setOrderData] = useState([]);

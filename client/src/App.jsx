@@ -1,18 +1,17 @@
 import ButtonGradient from "./assets/svg/ButtonGradient";
-import VehicleGallery from "./Screens/VehicleGallery";
+import VehicleGallery from "./Component_Stack/Pages/VehicleGallery"; 
+import Login from './Component_Stack/User_Authentication/Login';
+import Signup from './Component_Stack/User_Authentication/Signup.jsx';
+import Home from './Component_Stack/Pages/Home';
+import Aboutus from './Component_Stack/Pages/Aboutus.jsx';
+import Contactus from './Component_Stack/Pages/Contactus';
+import MyOrder from './Component_Stack/Pages/MyOrder.jsx';
+import Footer from "./Component_Stack/Sections/Footer";
+import Header from "./Component_Stack/Sections/Header";
+import AddVechicle from "./Component_Stack/Pages/AddVehicle";
+import YourVehicles from "./Component_Stack/Pages/YourVehicles";
 
-
-import Login from './Screens/Login.jsx';
 import { CartProvider } from './components/ContextReducer';
-import Home from './Screens/Home.jsx';
-import Signup from './Screens/Signup.jsx';
-import Aboutus from './Screens/Aboutus.jsx';
-import Contactus from './Screens/Contactus';
-import MyOrder from './Screens/MyOrder.jsx';
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import AddVechicle from "./Screens/AddVehicle";
-import YourVehicles from "./Screens/YourVehicles";
 
 
 import {
@@ -30,7 +29,6 @@ const App = () => {
       <div className="flex flex-col min-h-screen justify-between">
         <ButtonGradient />
         <Header />
-
         <main className="flex-grow">
           <Routes>
             <Route exact path='/' element={<Home />} />
@@ -44,7 +42,6 @@ const App = () => {
             <Route exact path='/yourvehicles' element={<YourVehicles />} />
           </Routes>
         </main>
-
         <Footer />
       </div>
     </CartProvider>
