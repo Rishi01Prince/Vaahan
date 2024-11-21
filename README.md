@@ -2,7 +2,6 @@
 
 Vaahan is a user-friendly web application designed for scooter, bike, and car rentals on an hourly or daily basis. This project utilizes the MERN (MongoDB, Express, React, Node.js) stack to provide a seamless rental experience for customers and includes enhanced features for improved functionality.
 
-### Note : Some features may be temporarily unavailable as we updating the features. Thank you for your patience!
 
 ## Features
 
@@ -52,13 +51,6 @@ Contributions are welcome! If you'd like to contribute to this project, feel fre
 ![Vaahan2](https://github.com/user-attachments/assets/9252189a-a963-45af-93d2-1440ab18dcf5)
 ![Vaahan3](https://github.com/user-attachments/assets/88b51de4-28ee-473a-b829-02fc3a0ebef8)
 
- 
-## Old Implementations Preview
-### Git : https://github.com/Rishi01Prince/Instant_Hunt-2.0
-![image](https://github.com/Rishi01Prince/Easy-Reach-2.0/assets/117525650/ac5afad2-843d-4b1f-8392-eb831432fc78)
-![image](https://github.com/Rishi01Prince/Easy-Reach-2.0/assets/117525650/a9ee3dfd-300f-41d8-ae93-deaf26c8e4d9)
-![image](https://github.com/Rishi01Prince/Easy-Reach-2.0/assets/117525650/6d334d45-e33f-466e-b854-cc3c3e79532a)
-![image](https://github.com/Rishi01Prince/Easy-Reach-2.0/assets/117525650/be517865-a408-4a07-8cb1-47e8acc70e2b)
 
 ```
 
