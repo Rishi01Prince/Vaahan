@@ -12,6 +12,7 @@ import AddVechicle from "./Component_Stack/Pages/AddVehicle";
 import YourVehicles from "./Component_Stack/Pages/YourVehicles";
 
 import { CartProvider } from './components/ContextReducer';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 import {
@@ -25,6 +26,7 @@ import {
 
 const App = () => {
   return (
+    <GoogleOAuthProvider clientId="214789808951-o4igvnhbjdp2dn5n2oaf1v245orf5j2j.apps.googleusercontent.com">
     <CartProvider>
       <div className="flex flex-col min-h-screen justify-between">
         <ButtonGradient />
@@ -45,6 +47,7 @@ const App = () => {
         <Footer />
       </div>
     </CartProvider>
+    </GoogleOAuthProvider>
 
   );
 };

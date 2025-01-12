@@ -10,6 +10,10 @@ import { HamburgerMenu } from "./design/Header";
 import Modal from '../../Modal';
 import { useCart } from '../../components/ContextReducer';
 
+
+import { googleLogout } from '@react-oauth/google';
+
+
 const Header = () => {
   const pathname = useLocation();
   const [openNavigation, setOpenNavigation] = useState(false);
@@ -18,6 +22,7 @@ const Header = () => {
   let data = useCart();
 
   const handleLogout = () => {
+    googleLogout();
     localStorage.removeItem("authToken");
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");

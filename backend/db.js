@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+
 mongoose.set('strictQuery', true);
 
 const mongoURI = process.env.DATABASE.replace('<DATABASE_USERNAME>' , process.env.DATABASE_USERNAME).replace('<DATABASE_PASSWORD>' , process.env.DATABASE_PASSWORD);
