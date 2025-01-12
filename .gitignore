@@ -46,3 +46,4 @@ yarn/
 *.local
 *.pid
 client/client_secret_*.json
+.env
