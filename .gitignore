@@ -45,3 +45,4 @@ yarn/
 # Local project files
 *.local
 *.pid
+client/client_secret_*.json
