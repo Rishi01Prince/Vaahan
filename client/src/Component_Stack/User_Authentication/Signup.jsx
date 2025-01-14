@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { EyeIcon, EyeOffIcon, MapPinIcon } from "lucide-react";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,12 +20,20 @@ export default function Signup() {
 
   const navigate = useNavigate();
 
-  const googleAuth = () => {
-    window.open(
-      `${process.env.REACT_APP_API_URL}/user/auth/google/callback`,
-      "_self"
-    );
-  };
+  const googleLogin = useGoogleLogin({
+    onSuccess: async ({ code }) => {
+      console.log('Google Login Successful:', code);
+      const token = await axios.post(`${import.meta.env.VITE_APP_API_URL}/user/googleSignIn`, { 
+        code: code,
+      });
+      // console.log(tokens);
+    
+      localStorage.setItem("userEmail", token.data.data.email);
+      localStorage.setItem("authToken",token.data.authToken);
+      navigate("/");
+    },
+    flow: 'auth-code',
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -275,7 +285,7 @@ export default function Signup() {
           <div className="mt-4">
             <button
               type="button"
-              onClick={googleAuth}
+              onClick={googleLogin}
               className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               Log in with Google

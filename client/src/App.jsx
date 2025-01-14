@@ -10,6 +10,7 @@ import Footer from "./Component_Stack/Sections/Footer";
 import Header from "./Component_Stack/Sections/Header";
 import AddVechicle from "./Component_Stack/Pages/AddVehicle";
 import YourVehicles from "./Component_Stack/Pages/YourVehicles";
+import {AuthenticationContextProvider} from "./Context/Authentication.jsx";
 
 import { CartProvider } from './components/ContextReducer';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -25,8 +26,11 @@ import {
 
 
 const App = () => {
+  // const [theme, setTheme] = useState('light');
+
   return (
-    <GoogleOAuthProvider clientId="214789808951-o4igvnhbjdp2dn5n2oaf1v245orf5j2j.apps.googleusercontent.com">
+  <AuthenticationContextProvider> 
+    <GoogleOAuthProvider clientId={`${import.meta.env.VITE_GOOGLE_CLIENT_ID}`}>
     <CartProvider>
       <div className="flex flex-col min-h-screen justify-between">
         <ButtonGradient />
@@ -48,7 +52,7 @@ const App = () => {
       </div>
     </CartProvider>
     </GoogleOAuthProvider>
-
+  </AuthenticationContextProvider>
   );
 };
 

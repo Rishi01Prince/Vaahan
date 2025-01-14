@@ -113,6 +113,7 @@ const googleSignIn = async (req, res) => {
         console.log("Received a Google Sign-In request!");
 
         const authorizationCode = req.body.code;
+        console.log("Authorization code:", authorizationCode);
         if (!authorizationCode) {
             return res.status(400).json({
                 success: false,
@@ -136,8 +137,6 @@ const googleSignIn = async (req, res) => {
                 message: "Failed to retrieve ID token from Google.",
             });
         }
-
-        // Decode and verify the ID token
         const decodedToken = jwt.decode(tokens.id_token);
         if (!decodedToken) {
             return res.status(401).json({
@@ -146,9 +145,7 @@ const googleSignIn = async (req, res) => {
             });
         }
 
-        // Extract necessary data from the decoded token
         const { name, email, sub: googleId } = decodedToken;
-
         if (!email) {
             return res.status(400).json({
                 success: false,
@@ -156,11 +153,8 @@ const googleSignIn = async (req, res) => {
             });
         }
 
-        // Check if the user already exists in the database
         let userData = await User.findOne({ email });
-
         if (!userData) {
-            // Create a new user if not found
             userData = await User.create({
                 name,
                 email,
@@ -171,11 +165,9 @@ const googleSignIn = async (req, res) => {
             console.log(`User found: ${email}`);
         }
 
-        // Create a JWT token for authentication
         const payload = { user: { id: userData.id } };
         const authToken = jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
 
-        // Respond with success and token
         return res.status(200).json({
             success: true,
             authToken,
@@ -183,8 +175,6 @@ const googleSignIn = async (req, res) => {
         });
     } catch (error) {
         console.error("Error during Google Sign-In:", error.message);
-
-        // Handle specific errors during token exchange or verification
         if (error.response && error.response.data) {
             return res.status(400).json({
                 success: false,

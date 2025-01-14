@@ -1,88 +1,28 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-
-
-<GoogleLogin
-  onSuccess={(credentialResponse) => {
-    console.log("Google Credential Response:", credentialResponse);
-    const idToken = credentialResponse.credential; // ID Token
-    // saveGoogleToken({ access_token: idToken });
-  }}
-  onError={() => {
-    console.log("Login Failed");
-  }}
-/>
-
 
 export default function Login() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
-  // Save Google token and send it to the backend
-  // Save Google token and validate it before sending to the backend
-// const saveGoogleToken = async (token) => {
-//   console.log("Received Google Token:", token);
-
-//   try {
-//     // Step 1: Validate the token using Google's endpoint
-//     const validationResponse = await fetch(
-//       `https://oauth2.googleapis.com/tokeninfo?id_token=${token.access_token}`
-//     );
-
-//     const validationData = await validationResponse.json();
-
-//     if (!validationResponse.ok) {
-//       console.error("Google Token validation failed:", validationData);
-//       setErrorMessage("Google Sign-In validation failed. Please try again.");
-//       return;
-//     }
-
-//     console.log("Validated Token Data:", validationData);
-
-//     // Optional: You can use this data to pre-fill user info or additional logic
-
-//     // Step 2: Send the validated token to the backend
-//     const response = await fetch("http://localhost:6000/user/googleSignIn", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         token: token.access_token, // Send the token to the backend
-//       }),
-//     });
-
-//     const json = await response.json();
-
-//     if (json.success) {
-//       localStorage.setItem("authToken", json.authToken);
-//       navigate("/"); // Redirect to home page on successful login
-//     } else {
-//       setErrorMessage("Google Sign-In failed on the backend. Please try again.");
-//     }
-//   } catch (error) {
-//     console.error("Error during Google Sign-In:", error);
-//     setErrorMessage("An unexpected error occurred during Google Sign-In.");
-//   }
-// };
-
-
   const googleLogin = useGoogleLogin({
     onSuccess: async ({ code }) => {
       console.log('Google Login Successful:', code);
-      const tokens = await axios.post('http://localhost:7000/user/googleSignIn', {  // http://localhost:3001/auth/google backend that will exchange the code
-        code,
+      const token = await axios.post(`${import.meta.env.VITE_APP_API_URL}/user/googleSignIn`, { 
+        code: code,
       });
-      console.log("Rishi") ;
-      console.log(tokens);
+      // console.log(tokens);
+    
+      localStorage.setItem("userEmail", token.data.data.email);
+      localStorage.setItem("authToken",token.data.authToken);
+      navigate("/");
     },
     flow: 'auth-code',
   });
 
-  // Handle regular form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -90,7 +30,6 @@ export default function Login() {
       setErrorMessage("Please enter a valid email and password.");
       return;
     }
-
     const response = await fetch(
       `${import.meta.env.VITE_APP_API_URL}/user/login`,
       {
@@ -210,10 +149,19 @@ export default function Login() {
           <button
             className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#20B2AA] hover:bg-[#452c63] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             type="button"
-            onClick={() => googleLogin()} // Trigger Google Login
+            onClick={() => googleLogin()} 
           >
             Sign in with Google 🚀
           </button>
+          {/* <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              console.log("Google Credential Response:", credentialResponse);
+              const idToken = credentialResponse.credential; 
+            }}
+            onError={() => {
+              console.log("Login Failed");
+            }}
+          /> */}
         </form>
       </div>
     </div>
