@@ -154,11 +154,7 @@ const Header = () => {
                     {data !== undefined && data.length > 0 ? data.length : 0}
                   </span>
                 </Button>
-                {cartView ? (
-                  <Modal onClose={() => setCartView(false)}>
-                    <Cart />
-                  </Modal>
-                ) : null}
+                
                 <Button onClick={() => { handleLogout(); closeMenuOnLinkClick(); }}>Logout</Button>
               </div>
             )}
@@ -167,7 +163,6 @@ const Header = () => {
           <HamburgerMenu />
         </nav>
 
-        {/* Authentication Section for Desktop View */}
         {(!Cookies.get("authToken")) ? (
           <div className="hidden lg:flex items-center space-x-4">
             <Button>
@@ -183,21 +178,18 @@ const Header = () => {
               <Link to="/myorder">My Orders</Link>
             </Button>
             <Button onClick={() => setCartView(true)}>
+            <Link to="/myorder">
               <ShoppingCart size={18} className="mr-1" />
               <span className="ml-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {data !== undefined && data.length > 0 ? data.length : 0}
               </span>
+              </Link>
             </Button>
-            {cartView ? (
-              <Modal onClose={() => setCartView(false)}>
-                <Cart />
-              </Modal>
-            ) : null}
+           
             <Button onClick={handleLogout}>Logout</Button>
           </div>
         )}
 
-        {/* Hamburger Menu Button */}
         <Button className="ml-auto lg:hidden" px="px-3" onClick={toggleNavigation}>
           <MenuSvg openNavigation={openNavigation} />
         </Button>
