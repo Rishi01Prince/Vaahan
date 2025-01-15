@@ -4,6 +4,7 @@ backend/config.env
 client/node_modules/
 client/.env
 
+
 /SeedData
 
 # Build outputs
@@ -26,6 +27,7 @@ client/.env.local
 backend/logs/
 client/logs/
 
+backend/sample/
 # IDE or editor specific files
 .vscode/
 .idea/
@@ -45,3 +47,5 @@ yarn/
 # Local project files
 *.local
 *.pid
+client/client_secret_*.json
+.env

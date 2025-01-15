@@ -1,6 +1,6 @@
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { disablePageScroll, enablePageScroll } from "scroll-lock";
-import { useState } from "react";
+import { useState , useContext } from "react";
 import { ShoppingCart } from "lucide-react";
 
 import logo from "../../assets/vahanlogo.png";
@@ -9,18 +9,27 @@ import MenuSvg from "../../assets/svg/MenuSvg";
 import { HamburgerMenu } from "./design/Header";
 import Modal from '../../Modal';
 import { useCart } from '../../components/ContextReducer';
+import Cookies from "js-cookie";
+import { googleLogout } from '@react-oauth/google';
+
 
 const Header = () => {
   const pathname = useLocation();
   const [openNavigation, setOpenNavigation] = useState(false);
   const navigate = useNavigate();
   const [cartView, setCartView] = useState(false);
+ 
   let data = useCart();
+  
+  
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    googleLogout();
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("profilePic");
+    Cookies.remove("authToken");
+    
     navigate("/login");
   };
 
@@ -53,12 +62,11 @@ const Header = () => {
       }`}
     >
       <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4">
-        {/* Logo */}
+       
         <Link className="block w-[12rem] xl:mr-8" to="/">
-          <img src={logo} width={100} height={40} alt="logo" />
+          <img src={(!localStorage.getItem("profilePic") | localStorage.getItem("profilePic") == '' )? logo : localStorage.getItem("profilePic")} width={65} height={20} alt="logo" className="rounded-full" />
         </Link>
 
-        {/* Navigation Menu */}
         <nav
           className={`${
             openNavigation ? "flex" : "hidden"
@@ -72,7 +80,7 @@ const Header = () => {
                   : "lg:text-n-1/50"
               } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
               to="/"
-              onClick={closeMenuOnLinkClick} // Close menu on click
+              onClick={closeMenuOnLinkClick} 
             >
               Home
             </Link>
@@ -84,7 +92,7 @@ const Header = () => {
                   : "lg:text-n-1/50"
               } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
               to="/rentnow"
-              onClick={closeMenuOnLinkClick} // Close menu on click
+              onClick={closeMenuOnLinkClick} 
             >
               Rent Now
             </Link>
@@ -96,7 +104,7 @@ const Header = () => {
                   : "lg:text-n-1/50"
               } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
               to="/yourvehicles"
-              onClick={closeMenuOnLinkClick} // Close menu on click
+              onClick={closeMenuOnLinkClick} 
             >
               Your Vehicles
             </Link>
@@ -108,7 +116,7 @@ const Header = () => {
                   : "lg:text-n-1/50"
               } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
               to="/aboutus"
-              onClick={closeMenuOnLinkClick} // Close menu on click
+              onClick={closeMenuOnLinkClick} 
             >
               About Us
             </Link>
@@ -126,7 +134,7 @@ const Header = () => {
             </Link>
 
             {/* Authentication Section for Mobile View */}
-            {(!localStorage.getItem("authToken")) ? (
+            {(!Cookies.get("authToken")) ? (
               <div className="flex flex-col items-center space-y-4 lg:hidden">
                 <Button onClick={closeMenuOnLinkClick}>
                   <Link to="/signup">Sign Up</Link>
@@ -160,7 +168,7 @@ const Header = () => {
         </nav>
 
         {/* Authentication Section for Desktop View */}
-        {(!localStorage.getItem("authToken")) ? (
+        {(!Cookies.get("authToken")) ? (
           <div className="hidden lg:flex items-center space-x-4">
             <Button>
               <Link to="/signup">Sign Up</Link>
