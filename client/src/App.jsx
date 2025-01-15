@@ -29,7 +29,6 @@ const App = () => {
   // const [theme, setTheme] = useState('light');
 
   return (
-  <AuthenticationContextProvider> 
     <GoogleOAuthProvider clientId={`${import.meta.env.VITE_GOOGLE_CLIENT_ID}`}>
     <CartProvider>
       <div className="flex flex-col min-h-screen justify-between">
@@ -52,7 +51,6 @@ const App = () => {
       </div>
     </CartProvider>
     </GoogleOAuthProvider>
-  </AuthenticationContextProvider>
   );
 };
 

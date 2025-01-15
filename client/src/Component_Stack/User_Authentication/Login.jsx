@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
+import Cookies from "js-cookie";
 import axios from "axios";
 
 export default function Login() {
@@ -8,16 +9,21 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
+
   const googleLogin = useGoogleLogin({
     onSuccess: async ({ code }) => {
       console.log('Google Login Successful:', code);
       const token = await axios.post(`${import.meta.env.VITE_APP_API_URL}/user/googleSignIn`, { 
         code: code,
       });
-      // console.log(tokens);
     
+
+      localStorage.setItem("userName", token.data.data.name);
+      localStorage.setItem("profilePic", token.data.data.picture);
       localStorage.setItem("userEmail", token.data.data.email);
-      localStorage.setItem("authToken",token.data.authToken);
+      Cookies.set("authToken", token.data.authToken, { expires: 7 });
+      console.log(Cookies.get("authToken"));
+      console.log(localStorage.getItem("profilePic"));
       navigate("/");
     },
     flow: 'auth-code',
@@ -49,6 +55,7 @@ export default function Login() {
     if (json.success) {
       localStorage.setItem("userEmail", credentials.email);
       localStorage.setItem("authToken", json.authToken);
+
       navigate("/");
     } else {
       setErrorMessage("Invalid credentials, please try again.");
@@ -86,7 +93,7 @@ export default function Login() {
                 value={credentials.email}
                 onChange={handleChange}
                 name="email"
-                placeholder="rishi.raj@gmail.com"
+                placeholder="Enter your email address"
                 required
               />
             </div>

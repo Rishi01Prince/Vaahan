@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { EyeIcon, EyeOffIcon, MapPinIcon } from "lucide-react";
 import { useGoogleLogin } from "@react-oauth/google";
+import Cookies from "js-cookie";
 import axios from "axios";
 
 export default function Signup() {
@@ -18,6 +19,7 @@ export default function Signup() {
     pincode: "",
   });
 
+  
   const navigate = useNavigate();
 
   const googleLogin = useGoogleLogin({
@@ -26,10 +28,12 @@ export default function Signup() {
       const token = await axios.post(`${import.meta.env.VITE_APP_API_URL}/user/googleSignIn`, { 
         code: code,
       });
-      // console.log(tokens);
-    
+
       localStorage.setItem("userEmail", token.data.data.email);
-      localStorage.setItem("authToken",token.data.authToken);
+      localStorage.setItem("userName", token.data.data.name);
+      localStorage.setItem("profilePic", token.data.data.picture);
+      Cookies.set("authToken", token.data.authToken, { expires: 7 });
+      console.log(Cookies.get("authToken"));
       navigate("/");
     },
     flow: 'auth-code',
