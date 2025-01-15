@@ -110,10 +110,9 @@ const loginUser = async (req, res) => {
 
 const googleSignIn = async (req, res) => {
     try {
-        console.log("Received a Google Sign-In request!");
 
         const authorizationCode = req.body.code;
-        console.log("Authorization code:", authorizationCode);
+
         if (!authorizationCode) {
             return res.status(400).json({
                 success: false,
@@ -130,6 +129,7 @@ const googleSignIn = async (req, res) => {
         });
 
         const tokens = tokenResponse.data;
+        // console.log("Received tokens:", tokens);
 
         if (!tokens.id_token) {
             return res.status(400).json({
@@ -145,7 +145,7 @@ const googleSignIn = async (req, res) => {
             });
         }
 
-        const { name, email, sub: googleId } = decodedToken;
+        const { name, email, sub: googleId , picture} = decodedToken;
         if (!email) {
             return res.status(400).json({
                 success: false,
@@ -159,9 +159,12 @@ const googleSignIn = async (req, res) => {
                 name,
                 email,
                 googleId,
+                picture
             });
             console.log(`New user created: ${email}`);
         } else {
+            userData.picture = picture;
+            await userData.save();
             console.log(`User found: ${email}`);
         }
 
@@ -182,7 +185,6 @@ const googleSignIn = async (req, res) => {
             });
         }
 
-        // General server error
         return res.status(500).json({
             success: false,
             message: "An error occurred during Google Sign-In.",
