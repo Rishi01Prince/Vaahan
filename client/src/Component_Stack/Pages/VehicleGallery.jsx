@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, CardContent, TextField, MenuItem, Select, Button } from '@mui/material';
 import { MapPin } from 'lucide-react';
 import VehicleCard from '../Cards/VehicleCard';
+import vehicle from '/Fallback_Data/vechicle.js';
 
 const fetchVehicles = async () => {
   try {
@@ -18,8 +19,9 @@ const fetchVehicles = async () => {
   }
 };
 
+// const vechicles = 
 export default function VehicleGallery() {
-  const [vehicles, setVehicles] = useState([]);
+  const [vehicles, setVehicles] = useState(vehicle);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('All');
   const [location, setLocation] = useState('');
