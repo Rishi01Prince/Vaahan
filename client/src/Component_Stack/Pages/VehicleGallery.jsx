@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, CardContent, TextField, MenuItem, Select, Button } from '@mui/material';
 import { MapPin } from 'lucide-react';
 import VehicleCard from '../Cards/VehicleCard';
-import vehicle from '/Fallback_Data/vechicle.js';
+import {vehicle} from '../../assets/Fallback_Data/vechicle';
 
 const fetchVehicles = async () => {
   try {
@@ -21,6 +21,8 @@ const fetchVehicles = async () => {
 
 // const vechicles = 
 export default function VehicleGallery() {
+  // const vechicle_data = vehicle.json();
+  console.log(vehicle);
   const [vehicles, setVehicles] = useState(vehicle);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('All');
@@ -29,14 +31,18 @@ export default function VehicleGallery() {
 
   useEffect(() => {
     fetchVehicles().then((data) => {
-      setVehicles(data);
+      if (data.length === 0) {
+        setVehicles(vehicle); // Use fallback data if fetch fails
+      } else {
+        setVehicles(data);
+      }
       setIsLoading(false);
     });
   }, []);
 
   const handleFetchLocation = () => {
     alert('Fetching live location...');
-    // Add your logic to fetch live location if needed
+    
   };
 
   const filteredVehicles = vehicles.filter(
@@ -46,6 +52,7 @@ export default function VehicleGallery() {
       (location === '' || vehicle.pincode.includes(location))
   );
 
+  
   return (
     <div className="min-h-screen bg-transparent dark:bg-gray-900 text-white dark:text-gray-100 p-8 mt-24">
       <h1 className="text-4xl font-bold mb-8">Vehicle Gallery</h1>
