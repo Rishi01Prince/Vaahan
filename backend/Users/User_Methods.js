@@ -8,13 +8,9 @@ const axios = require('axios');
 
 const jwtSecret = process.env.jwtSecretKey;
 // const client = new OAuth2Client("process.env.CLIENT_ID");
-
-
 // const {
 //     OAuth2Client,
 //   } = require('google-auth-library');
-  
-  
 //   const oAuth2Client = new OAuth2Client(
 //     process.env.CLIENT_ID,
 //     process.env.CLIENT_SECRET,
@@ -129,7 +125,7 @@ const googleSignIn = async (req, res) => {
         });
 
         const tokens = tokenResponse.data;
-        // console.log("Received tokens:", tokens);
+        // console.log("Received tokens:", tokens)/.l;
 
         if (!tokens.id_token) {
             return res.status(400).json({

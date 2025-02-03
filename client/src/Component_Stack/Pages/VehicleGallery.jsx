@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardContent, TextField, MenuItem, Select, Button } from '@mui/material';
+import { Card, CardContent, TextField, MenuItem, Select, Button, CircularProgress } from '@mui/material';
 import { MapPin } from 'lucide-react';
 import VehicleCard from '../Cards/VehicleCard';
 
@@ -11,7 +11,7 @@ const fetchVehicles = async () => {
       throw new Error('Network response was not ok');
     }
     const data = await response.json();
-    return data.vehicle; 
+    return data.vehicle;
   } catch (error) {
     console.error('Error fetching vehicles:', error);
     return [];
@@ -24,6 +24,7 @@ export default function VehicleGallery() {
   const [selectedType, setSelectedType] = useState('All');
   const [location, setLocation] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
   useEffect(() => {
     fetchVehicles().then((data) => {
@@ -33,8 +34,41 @@ export default function VehicleGallery() {
   }, []);
 
   const handleFetchLocation = () => {
-    alert('Fetching live location...');
-    // Add your logic to fetch live location if needed
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    setIsFetchingLocation(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await response.json();
+
+          if (data.address && data.address.postcode) {
+            setLocation(data.address.postcode);
+          } else {
+            alert('Unable to fetch pin code.');
+          }
+        } catch (error) {
+          console.error('Error fetching location:', error);
+          alert('Failed to fetch location details.');
+        }
+
+        setIsFetchingLocation(false);
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        alert('Could not fetch location. Please enable location services.');
+        setIsFetchingLocation(false);
+      }
+    );
   };
 
   const filteredVehicles = vehicles.filter(
@@ -98,16 +132,19 @@ export default function VehicleGallery() {
                 fullWidth
               />
             </div>
-            <Button onClick={handleFetchLocation} variant="contained" color="primary">
+            <Button onClick={handleFetchLocation} variant="contained" color="primary" disabled={isFetchingLocation}>
               <MapPin className="w-4 h-4 mr-2" />
-              Get Current Location
+              {isFetchingLocation ? 'Fetching...' : 'Get Current Location'}
             </Button>
           </div>
         </CardContent>
       </Card>
 
       {isLoading ? (
-        <div className="text-center">Loading vehicles...</div>
+        <div className="flex justify-center items-center h-64">
+          <CircularProgress size={50} />
+          <span className="ml-4 text-lg">Loading vehicles...</span>
+        </div>
       ) : (
         <>
           <div className="flex justify-between items-center mb-4">
@@ -136,20 +173,3 @@ export default function VehicleGallery() {
     </div>
   );
 }
-
-VehicleGallery.propTypes = {
-  vehicle: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    categoryName: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-    pincode: PropTypes.string.isRequired,
-    ownerEmail: PropTypes.string,
-    ownerPhone: PropTypes.string,
-    halfDayPrice: PropTypes.number,
-    fullDayPrice: PropTypes.number,
-    year: PropTypes.number,
-    type: PropTypes.string,
-  }),
-};

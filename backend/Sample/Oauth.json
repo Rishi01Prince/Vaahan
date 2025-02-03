@@ -1,20 +1,21 @@
 {
     "data": {
         "success": true,
-        "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc4MzgxYzgyZjdhNjk4OTAxMjlmNDkyIn0sImlhdCI6MTczNjg4OTM1OCwiZXhwIjoxNzM2ODkyOTU4fQ.u7JfHoBITmkNR3bjttJPNWyUjOTacraUy0tVHU-iNkM",
+        "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjc4MzgxYzgyZjdhNjk4OTAxMjlmNDkyIn0sImlhdCI6MTczNjk1NjcwOCwiZXhwIjoxNzM2OTYwMzA4fQ.CG-7yYlLtdZqBJEUiIzYA9-kaVBmgsG2IeNr3xK6TOE",
         "data": {
             "_id": "678381c82f7a69890129f492",
             "name": "Rishi Raj",
             "email": "rishi01prince@gmail.com",
             "googleId": "114509665550918623619",
             "date": "2025-01-12T08:48:08.477Z",
-            "__v": 0
+            "__v": 0,
+            "picture": "https://lh3.googleusercontent.com/a/ACg8ocIVVYI1iHGuXEcmnSezzb2VvqPHTLnVugqh2Zz9qM_JS8__zso6qg=s96-c"
         }
     },
     "status": 200,
     "statusText": "OK",
     "headers": {
-        "content-length": "386",
+        "content-length": "499",
         "content-type": "application/json; charset=utf-8"
     },
     "config": {
@@ -46,7 +47,7 @@
         },
         "method": "post",
         "url": "http://localhost:5000/user/googleSignIn",
-        "data": "{\"code\":\"4/0AanRRrthAIUq19WgLHTmERDuiHQwCYpLJCuGFDcCmYDLshpDkzsEzWQFzzamvauwOFiXbw\"}"
+        "data": "{\"code\":\"4/0AanRRrtUK3DIE0DL-zjxGWWZN1xcadEL8b0-wMePLwQQm3VSSKOS-1n0ruYMHlO4LQz_7w\"}"
     },
     "request": {}
 }
