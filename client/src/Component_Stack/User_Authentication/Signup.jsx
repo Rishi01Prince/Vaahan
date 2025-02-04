@@ -107,7 +107,6 @@ export default function Signup() {
         )}
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div className="space-y-4">
-            {/* Name Section */}
             <div>
               <label
                 htmlFor="name"
