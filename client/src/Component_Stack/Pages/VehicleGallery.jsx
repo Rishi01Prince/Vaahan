@@ -18,11 +18,29 @@ const fetchVehicles = async () => {
   }
 };
 
+// Haversine Formula to calculate distance between two coordinates
+const getDistance = (lat1, lon1, lat2, lon2) => {
+  if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity; // Handle missing coordinates
+  const R = 6371; // Radius of the Earth in km
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // Distance in km
+};
+
 export default function VehicleGallery() {
   const [vehicles, setVehicles] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('All');
   const [location, setLocation] = useState('');
+  const [userCoords, setUserCoords] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
@@ -44,6 +62,7 @@ export default function VehicleGallery() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
+        setUserCoords({ latitude, longitude });
 
         try {
           const response = await fetch(
@@ -71,12 +90,26 @@ export default function VehicleGallery() {
     );
   };
 
-  const filteredVehicles = vehicles.filter(
-    (vehicle) =>
-      (selectedType === 'All' || vehicle.categoryName === selectedType) &&
-      vehicle.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (location === '' || vehicle.pincode.includes(location))
-  );
+  const processedVehicles = vehicles
+    .map((vehicle) => {
+      if (userCoords && vehicle.coordinates) {
+        const distance = getDistance(
+          userCoords.latitude,
+          userCoords.longitude,
+          vehicle.coordinates.latitude,
+          vehicle.coordinates.longitude
+        );
+        return { ...vehicle, distance };
+      }
+      return { ...vehicle, distance: Infinity }; // If no coordinates, keep it at the end
+    })
+    .filter(
+      (vehicle) =>
+        (selectedType === 'All' || vehicle.categoryName === selectedType) &&
+        vehicle.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (location === '' || vehicle.pincode.includes(location))
+    )
+    .sort((a, b) => a.distance - b.distance); // Sort by distance (closest first)
 
   return (
     <div className="min-h-screen bg-transparent dark:bg-gray-900 text-white dark:text-gray-100 p-8 mt-24">
@@ -149,10 +182,10 @@ export default function VehicleGallery() {
         <>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-semibold">Available Vehicles</h2>
-            <div className="text-sm text-gray-500">{filteredVehicles.length} vehicles found</div>
+            <div className="text-sm text-gray-500">{processedVehicles.length} vehicles found</div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredVehicles.map((vehicle) => (
+            {processedVehicles.map((vehicle) => (
               <VehicleCard
                 key={vehicle._id}
                 imageUrl={vehicle.image}
@@ -162,10 +195,11 @@ export default function VehicleGallery() {
                 ownerPhone={vehicle.ownerPhone}
                 halfDayPrice={vehicle.halfDayPrice}
                 fullDayPrice={vehicle.fullDayPrice}
+                distance={vehicle.distance.toFixed(2) + ' km'}
               />
             ))}
           </div>
-          {filteredVehicles.length === 0 && (
+          {processedVehicles.length === 0 && (
             <p className="text-center text-gray-400 mt-8">No vehicles found matching your criteria.</p>
           )}
         </>

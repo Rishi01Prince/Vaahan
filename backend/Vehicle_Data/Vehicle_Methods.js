@@ -29,7 +29,9 @@ const addVehicle = async (req, res) => {
       halfDayPrice,
       fullDayPrice,
       year,
-      type
+      type,
+      latitude,
+      longitude
     } = req.body;
 
     const newVehicleData = {
@@ -50,9 +52,14 @@ const addVehicle = async (req, res) => {
       type
     };
 
+    // Include coordinates only if both latitude and longitude exist
+    if (latitude !== undefined && longitude !== undefined) {
+      newVehicleData.coordinates = { latitude, longitude };
+    }
+
     // Check if vehicle with the same name and ownerEmail already exists
     const isVehicleExist = await Vehicles.findOne({ name: newVehicleData.name, owneremail: newVehicleData.owneremail });
-    
+
     if (!isVehicleExist) {
       const newVehicle = await Vehicles.create(newVehicleData);
       res.json({ success: true, message: 'Vehicle added successfully', newVehicle });
@@ -83,7 +90,9 @@ const updateVehicle = async (req, res) => {
       fullDayPrice,
       year,
       type,
-      _id
+      _id,
+      latitude,
+      longitude
     } = req.body;
 
     const newData = {
@@ -103,6 +112,11 @@ const updateVehicle = async (req, res) => {
       year,
       type
     };
+
+    // Include coordinates only if both latitude and longitude exist
+    if (latitude !== undefined && longitude !== undefined) {
+      newData.coordinates = { latitude, longitude };
+    }
 
     const updatedVehicle = await Vehicles.findOneAndUpdate({ _id }, newData, { new: true });
     res.json({ success: true, message: 'Vehicle updated successfully', newVehicle: updatedVehicle });
@@ -127,12 +141,30 @@ const deleteVehicle = async (req, res) => {
 // Add multiple vehicles in bulk
 const addVehiclesInBulk = async (req, res) => {
   try {
-    const vehicles = req.body; 
+    const vehicles = req.body;
     if (!Array.isArray(vehicles) || vehicles.length === 0) {
       return res.status(400).send({ success: false, message: 'Invalid input' });
     }
 
-    const result = await Vehicles.insertMany(vehicles);
+    const processedVehicles = vehicles.map(vehicle => {
+      const vehicleData = { ...vehicle };
+
+      // Include coordinates only if both latitude and longitude exist
+      if (vehicle.latitude !== undefined && vehicle.longitude !== undefined) {
+        vehicleData.coordinates = {
+          latitude: vehicle.latitude,
+          longitude: vehicle.longitude
+        };
+      }
+
+      // Remove latitude and longitude fields if they're in the main object
+      delete vehicleData.latitude;
+      delete vehicleData.longitude;
+
+      return vehicleData;
+    });
+
+    const result = await Vehicles.insertMany(processedVehicles);
     res.status(201).send({ success: true, message: 'Vehicles added successfully', result });
   } catch (error) {
     console.error(error);
