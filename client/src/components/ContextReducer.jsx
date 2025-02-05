@@ -1,59 +1,75 @@
-import React, { useReducer, useContext, createContext } from 'react';
+import React, { useReducer, useContext, createContext } from "react";
 
-//Context humlog tab banate hai jab hum aisi value define krte hai jo sb jagah
-//reflect ho rahi hai jaie parent to child and then grandchild ..
-//ek bar ye jaha change hui sb jagah change ho jaaegi
+// Create Contexts for State and Dispatch
 const CartStateContext = createContext();
 const CartDispatchContext = createContext();
 
+// Reducer function to handle cart actions
 const reducer = (state, action) => {
+  switch (action.type) {
+    case "ADD":
+      console.log("Item Added");
+      return [
+        ...state,
+        {
+          id: action.id,
+          name: action.name,
+          qty: action.qty,
+          span: action.span,
+          price: action.price,
+          img: action.img,
+        },
+      ];
 
-    switch (action.type) {
-        case "ADD":
-            console.log("ADD");
-            return [...state, { id: action.id, name: action.name, qty: action.qty, span: action.span, price: action.price, img: action.img }]
-        case "REMOVE":
-            let newArr = [...state]
-            newArr.splice(action.index, 1)
-            return newArr;
+    case "REMOVE":
+      console.log("Item Removed");
+      let newArr = [...state];
+      newArr.splice(action.index, 1);
+      return newArr;
 
-        case "DROP":
-            let empArray = []
-            return empArray
-            
-        case "UPDATE":
-            return state.map((vechicle) => {
-                if (vechicle.id === action.id) {
-                    console.log(vechicle.qty, parseInt(action.qty), action.price + vechicle.price);
-                    return {
-                        ...vechicle,
-                        qty: parseInt(action.qty) + vechicle.qty,
-                        price: action.price + vechicle.price,
-                    };
-                }
-                return vechicle;
-            });
-        default:
-            console.log("Error in Reducer");
-    }
+    case "DROP":
+      console.log("Cart Emptied");
+      return [];
+
+    case "LOAD_CART":
+      console.log("Cart Loaded");
+      return action.cart;
+
+    case "UPDATE":
+      return state.map((item) => {
+        if (item.id === action.id) {
+          console.log("Updating item:", item, action.qty, action.price);
+          return {
+            ...item,
+            qty: parseInt(action.qty) + item.qty, // Updated quantity logic
+            price: item.price * (parseInt(action.qty) + 1), // Updated price logic
+          };
+        }
+        return item;
+      });
+
+    default:
+      console.log("Error in Reducer: Invalid action");
+      return state;
+  }
 };
 
-
+// CartProvider component to wrap around the app
 export const CartProvider = ({ children }) => {
-    // Use me jaise set krte the waie hi isme condition ke hisab se check karenge
-    //dipatch :-  ye action hai ye bhai krna hai jaise add delete 
-    //state : ye jo state hai usko change krna hai
-    const [state, dispatch] = useReducer(reducer, []);
+  // Initial state is an empty array, but could be set to an initial cart if needed
+  const [state, dispatch] = useReducer(reducer, []);
 
-    return (
-
-        <CartDispatchContext.Provider value={dispatch}>
-            <CartStateContext.Provider value={state}>
-                {children}
-            </CartStateContext.Provider>
-        </CartDispatchContext.Provider>
-    )
+  return (
+    <CartDispatchContext.Provider value={dispatch}>
+      <CartStateContext.Provider value={state}>
+        {children}
+      </CartStateContext.Provider>
+    </CartDispatchContext.Provider>
+  );
 };
 
+// Custom hook to use cart state
 export const useCart = () => useContext(CartStateContext);
+
+// Custom hook to dispatch actions to cart
 export const useDispatchCart = () => useContext(CartDispatchContext);

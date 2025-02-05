@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
-import { MapPin, User, Phone, Clock } from 'lucide-react';
-import { useCart, useDispatchCart } from '../../components/ContextReducer';
+import { useState, useEffect, useRef } from "react";
+import { MapPin, User, Phone, Clock, Minus, Plus } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart, updateCartItem } from "../../redux/cartSlice";
+import { toast } from "react-toastify";
 
 export default function VehicleCard({
   imageUrl,
@@ -10,53 +12,37 @@ export default function VehicleCard({
   ownerPhone,
   halfDayPrice,
   fullDayPrice,
-  vdata
+  vdata,
 }) {
-  let data = useCart();
-  let dispatch = useDispatchCart();
+  const cart = useSelector((state) => state.cart.cart);
+  const dispatch = useDispatch();
 
-  const [qty, setQty] = useState(1); 
-  const [span, setSpan] = useState("Half Day"); 
+  const [qty, setQty] = useState(1);
+  const [span, setSpan] = useState("Half Day");
   const priceRef = useRef();
 
   const finalPrice =
     span === "Half Day" ? halfDayPrice * qty : fullDayPrice * qty;
 
-  const handleAddToCart = async () => {
-    let vehicle = data.find((item) => item.id === vdata._id);
+  const handleAddToCart = () => {
+    const vehicle = cart.find((item) => item.id === vdata._id);
 
-    if (vehicle) {
-      if (vehicle.span === span) {
-        await dispatch({
-          type: 'UPDATE',
-          id: vdata._id,
-          price: finalPrice,
-          qty: qty,
-        });
-        return;
-      } else {
-        await dispatch({
-          type: 'ADD',
+    if (vehicle && vehicle.span === span) {
+      dispatch(updateCartItem({ id: vdata._id, price: finalPrice, qty }));
+      toast.success(`${vehicle.name} has been added to the cart!`);
+      console.log("Current cart items:", cart);
+    } else {
+      dispatch(
+        addToCart({
           id: vdata._id,
           name: vdata.name,
           price: finalPrice,
-          qty: qty,
-          span: span,
+          qty,
+          span,
           img: vdata.img,
-        });
-        return;
-      }
+        })
+      );
     }
-
-    await dispatch({
-      type: 'ADD',
-      id: vdata._id,
-      name: vdata.name,
-      price: finalPrice,
-      qty: qty,
-      span: span,
-      img: vdata.img,
-    });
   };
 
   useEffect(() => {
@@ -92,20 +78,25 @@ export default function VehicleCard({
         </div>
 
         <div className="flex justify-between mb-4">
-          <select
-            className="h-10 w-1/3 bg rounded-lg p-2 cursor-pointer mr-2"
-            onChange={(e) => setQty(Number(e.target.value))}
-          >
-            {Array.from(Array(6), (e, i) => (
-              <option className="text-color-5" key={i + 1} value={i + 1}>
-                {i + 1}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center border bg-black rounded-lg px-3 py-2">
+            <button
+              className="text-white hover:text-red-500"
+              onClick={() => setQty((prev) => Math.max(1, prev - 1))}
+            >
+              <Minus className="w-5 h-5" />
+            </button>
+            <span className="mx-4 text-lg text-white font-semibold">{qty}</span>
+            <button
+              className="text-white hover:text-green-500"
+              onClick={() => setQty((prev) => prev + 1)}
+            >
+              <Plus className="w-5 h-5" />
+            </button>
+          </div>
 
           <select
             ref={priceRef}
-            className="h-10 w-2/3 bg-0 rounded-lg p-2 cursor-pointer"
+            className="h-10 w-2/3 rounded-lg p-2 cursor-pointer"
             onChange={(e) => setSpan(e.target.value)}
           >
             <option value="Half Day">Half Day - ₹{halfDayPrice}</option>
@@ -118,7 +109,9 @@ export default function VehicleCard({
             <Clock className="w-5 h-5 mr-2 text-blue-500" />
             <span className="text-sm text-gray-600">Total Price:</span>
           </div>
-          <span className="text-lg font-semibold text-blue-600">₹{finalPrice}</span>
+          <span className="text-lg font-semibold text-blue-600">
+            ₹{finalPrice}
+          </span>
         </div>
 
         <button

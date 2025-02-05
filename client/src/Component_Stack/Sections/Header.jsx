@@ -64,9 +64,9 @@ const Header = () => {
       }`}
     >
       <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4">
-       
         <Link className="block w-[12rem] xl:mr-8" to="/">
-          <img src={(!localStorage.getItem("profilePic") | localStorage.getItem("profilePic") == '' )? logo : localStorage.getItem("profilePic")} width={65} height={20} alt="logo" className="rounded-full" />
+         
+          <img src="https://lh3.googleusercontent.com/a/ACg8ocIVVYI1iHGuXEcmnSezzb2VvqPHTLnVugqh2Zz9qM_JS8__zso6qg=s96-c" width={65} height={20} alt="logo" className="rounded-full" />
         </Link>
 
         <nav
@@ -180,14 +180,13 @@ const Header = () => {
               <Link to="/myorder">My Orders</Link>
             </Button>
             <Button onClick={() => setCartView(true)}>
-            <Link to="/myorder">
+            <Link to="/mycart">
               <ShoppingCart size={18} className="mr-1" />
               <span className="ml-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {data !== undefined && data.length > 0 ? data.length : 0}
               </span>
               </Link>
             </Button>
-           
             <Button onClick={handleLogout}>Logout</Button>
           </div>
         )}
