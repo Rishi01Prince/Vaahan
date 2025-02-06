@@ -65,8 +65,8 @@ const VehicleSchema = new Schema({
   },
   coordinates: {
     type: {
-      latitude: { type: Number, required: true },
-      longitude: { type: Number, required: true }
+      latitude: { type: Number},
+      longitude: { type: Number }
     },
     required: [true, "Coordinates are required"]
   }
