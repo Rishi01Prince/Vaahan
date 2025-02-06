@@ -180,7 +180,7 @@ const Header = () => {
               <Link to="/myorder">My Orders</Link>
             </Button>
             <Button onClick={() => setCartView(true)}>
-            <Link to="/myorder">
+            <Link to="/mycart">
               <ShoppingCart size={18} className="mr-1" />
               <span className="ml-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {data !== undefined && data.length > 0 ? data.length : 0}

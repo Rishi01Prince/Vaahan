@@ -15,6 +15,7 @@ import {AuthenticationContextProvider} from "./Context/Authentication.jsx";
 import { CartProvider } from './components/ContextReducer';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
+import { ToastContainer } from "react-toastify";
 
 import {
   BrowserRouter as Router,
@@ -22,6 +23,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import MyCart from "./Component_Stack/Pages/MyCart.jsx";
 
 
 
@@ -31,6 +33,7 @@ const App = () => {
   return (
     <GoogleOAuthProvider clientId={`${import.meta.env.VITE_GOOGLE_CLIENT_ID}`}>
     <CartProvider>
+    <ToastContainer autoClose={1500} />
       <div className="flex flex-col min-h-screen justify-between">
         <ButtonGradient />
         <Header />
@@ -45,6 +48,8 @@ const App = () => {
             <Route exact path='/rentnow' element={<VehicleGallery />} />
             <Route exact path='/addvehicle' element={<AddVechicle />} />
             <Route exact path='/yourvehicles' element={<YourVehicles />} />
+            <Route exact path='/mycart' element={<MyCart />} />
+
           </Routes>
         </main>
         <Footer />
