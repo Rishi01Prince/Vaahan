@@ -8,9 +8,8 @@ import {
   Select,
   Button,
 } from "@mui/material";
-import { MapPin } from "lucide-react";
+import { MapPin, Search } from "lucide-react";
 import VehicleCard from "../Cards/VehicleCard";
-import { vehicle } from "../../assets/Fallback_Data/vechicle";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setVehicles,
@@ -29,6 +28,7 @@ const fetchVehicles = async () => {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
+    console.log("Fetched Vehicles Data:", data.vehicle); // Debugging
     return data.vehicle;
   } catch (error) {
     console.error("Error fetching vehicles:", error);
@@ -46,12 +46,46 @@ export default function VehicleGallery() {
       dispatch(setIsLoading(true));
       const data = await fetchVehicles();
       dispatch(setVehicles(data));
+      dispatch(setIsLoading(false));
     };
     fetchData();
   }, [dispatch]);
 
   const handleFetchLocation = () => {
-    alert("Fetching live location...");
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await response.json();
+
+          if (data.address?.postcode) {
+            dispatch(setLocation(data.address.postcode));
+          } else {
+            alert("Unable to fetch pin code.");
+          }
+        } catch (error) {
+          console.error("Error fetching location:", error);
+          alert("Failed to fetch location details.");
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        alert("Could not fetch location. Please enable location services.");
+      }
+    );
+  };
+
+  const handleFindNearestVehicle = async () => {
+    alert("Finding nearest vehicle...");
   };
 
   const filteredVehicles = vehicles.filter(
@@ -61,6 +95,8 @@ export default function VehicleGallery() {
       (location === "" || vehicle.pincode.includes(location))
   );
 
+  console.log("Filtered Vehicles:", filteredVehicles); 
+
   return (
     <div className="min-h-screen bg-transparent dark:bg-gray-900 text-white dark:text-gray-100 p-8 mt-24">
       <h1 className="text-4xl font-bold mb-8">Vehicle Gallery</h1>
@@ -69,10 +105,7 @@ export default function VehicleGallery() {
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <div className="flex-1">
-              <label
-                htmlFor="search"
-                className="block text-sm font-medium mb-1"
-              >
+              <label htmlFor="search" className="block text-sm font-medium mb-1">
                 Search Vehicles
               </label>
               <TextField
@@ -106,10 +139,7 @@ export default function VehicleGallery() {
           </div>
           <div className="flex flex-col sm:flex-row gap-4 items-end">
             <div className="flex-1">
-              <label
-                htmlFor="location"
-                className="block text-sm font-medium mb-1"
-              >
+              <label htmlFor="location" className="block text-sm font-medium mb-1">
                 Location (Pin Code)
               </label>
               <TextField
@@ -121,13 +151,13 @@ export default function VehicleGallery() {
                 fullWidth
               />
             </div>
-            <Button
-              onClick={handleFetchLocation}
-              variant="contained"
-              color="primary"
-            >
+            <Button onClick={handleFetchLocation} variant="contained" color="primary">
               <MapPin className="w-4 h-4 mr-2" />
               Get Current Location
+            </Button>
+            <Button onClick={handleFindNearestVehicle} variant="contained" color="secondary">
+              <Search className="w-4 h-4 mr-2" />
+              Find Nearest Vehicle
             </Button>
           </div>
         </CardContent>
@@ -168,21 +198,3 @@ export default function VehicleGallery() {
     </div>
   );
 }
-
-VehicleGallery.propTypes = {
-  vehicle: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    categoryName: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-    pincode: PropTypes.string.isRequired,
-    ownerEmail: PropTypes.string,
-    ownerPhone: PropTypes.string,
-    halfDayPrice: PropTypes.number,
-    fullDayPrice: PropTypes.number,
-    year: PropTypes.number,
-    type: PropTypes.string,
-  }),
-};
-  

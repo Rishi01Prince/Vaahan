@@ -1,16 +1,24 @@
 const express = require('express');
-const vehicles = express.Router();
-const { getVehicles, addVehicle, updateVehicle, deleteVehicle, addVehiclesInBulk } = require('./Vehicle_Methods');
+const {
+  addVehicle,
+  updateVehicle,
+  deleteVehicle,
+  getAllVehicles,
+  getVehicleById,
+  getNearestVehicle,
+  rentVehicle,
+  returnVehicle
+} = require('./vehicleController');
 
-vehicles
-    .route('/')
-    .get(getVehicles)
-    .post(addVehicle)
-    .patch(updateVehicle)
-    .delete(deleteVehicle);
+const router = express.Router();
 
-vehicles
-    .route('/bulk')
-    .post(addVehiclesInBulk); 
+router.post('/add', addVehicle);
+router.put('/update/:id', updateVehicle);
+router.delete('/delete/:id', deleteVehicle);
+router.get('/all', getAllVehicles);
+router.get('/:id', getVehicleById);
+router.get('/nearest', getNearestVehicle); 
+router.post('/rent/:id', rentVehicle);  
+router.post('/return/:id', returnVehicle);  
 
-module.exports = vehicles;
+module.exports = router;

@@ -1,183 +1,167 @@
-const Vehicles = require('../models/Vehicle');
+const QuadTree = require('js-quadtree');
+const Vehicle = require('../models/Vehicle');
 
-// Get all vehicles
-const getVehicles = async (req, res) => {
-  try {
-    const data = await Vehicles.find({});
-    res.status(200).send({ "vehicle": data });
-  } catch (error) {
-    console.log(error.message);
-    res.status(404).send({ message: error.message });
-  }
-}
 
-// Add a single vehicle
 const addVehicle = async (req, res) => {
   try {
-    const {
-      categoryName,
-      name,
-      options,
-      image,
-      owneremail,
-      phone,
-      location,
-      pincode,
-      availability,
-      ownerName,
-      ownerPhone,
-      halfDayPrice,
-      fullDayPrice,
-      year,
-      type,
-      latitude,
-      longitude
-    } = req.body;
-
-    const newVehicleData = {
-      categoryName,
-      name,
-      options,
-      image,
-      owneremail,
-      phone,
-      location,
-      pincode,
-      availability,
-      ownerName,
-      ownerPhone,
-      halfDayPrice,
-      fullDayPrice,
-      year,
-      type
-    };
-
-    // Include coordinates only if both latitude and longitude exist
-    if (latitude !== undefined && longitude !== undefined) {
-      newVehicleData.coordinates = { latitude, longitude };
-    }
-
-    // Check if vehicle with the same name and ownerEmail already exists
-    const isVehicleExist = await Vehicles.findOne({ name: newVehicleData.name, owneremail: newVehicleData.owneremail });
-
-    if (!isVehicleExist) {
-      const newVehicle = await Vehicles.create(newVehicleData);
-      res.json({ success: true, message: 'Vehicle added successfully', newVehicle });
-    } else {
-      res.json({ success: false, message: 'Vehicle already exists' });
-    }
+    const vehicle = new Vehicle(req.body);
+    await vehicle.save();
+    res.status(201).json({ success: true, message: 'Vehicle added successfully', vehicle });
   } catch (error) {
-    res.json({ success: false, error: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
-}
-
-// Update an existing vehicle
-const updateVehicle = async (req, res) => {
-  try {
-    const {
-      categoryName,
-      name,
-      options,
-      image,
-      owneremail,
-      phone,
-      location,
-      pincode,
-      availability,
-      ownerName,
-      ownerPhone,
-      halfDayPrice,
-      fullDayPrice,
-      year,
-      type,
-      _id,
-      latitude,
-      longitude
-    } = req.body;
-
-    const newData = {
-      categoryName,
-      name,
-      options,
-      image,
-      owneremail,
-      phone,
-      location,
-      pincode,
-      availability,
-      ownerName,
-      ownerPhone,
-      halfDayPrice,
-      fullDayPrice,
-      year,
-      type
-    };
-
-    // Include coordinates only if both latitude and longitude exist
-    if (latitude !== undefined && longitude !== undefined) {
-      newData.coordinates = { latitude, longitude };
-    }
-
-    const updatedVehicle = await Vehicles.findOneAndUpdate({ _id }, newData, { new: true });
-    res.json({ success: true, message: 'Vehicle updated successfully', newVehicle: updatedVehicle });
-  } catch (error) {
-    console.error(error);
-    res.json({ success: false, error: error.message });
-  }
-}
-
-// Delete a vehicle
-const deleteVehicle = async (req, res) => {
-  try {
-    const { id } = req.body;
-    const deletedVehicle = await Vehicles.findOneAndDelete({ _id: id });
-    res.json({ success: true, message: 'Vehicle deleted successfully', vehicle: deletedVehicle });
-  } catch (error) {
-    console.error(error);
-    res.json({ success: false, error: error.message });
-  }
-}
-
-// Add multiple vehicles in bulk
-const addVehiclesInBulk = async (req, res) => {
-  try {
-    const vehicles = req.body;
-    if (!Array.isArray(vehicles) || vehicles.length === 0) {
-      return res.status(400).send({ success: false, message: 'Invalid input' });
-    }
-
-    const processedVehicles = vehicles.map(vehicle => {
-      const vehicleData = { ...vehicle };
-
-      // Include coordinates only if both latitude and longitude exist
-      if (vehicle.latitude !== undefined && vehicle.longitude !== undefined) {
-        vehicleData.coordinates = {
-          latitude: vehicle.latitude,
-          longitude: vehicle.longitude
-        };
-      }
-
-      // Remove latitude and longitude fields if they're in the main object
-      delete vehicleData.latitude;
-      delete vehicleData.longitude;
-
-      return vehicleData;
-    });
-
-    const result = await Vehicles.insertMany(processedVehicles);
-    res.status(201).send({ success: true, message: 'Vehicles added successfully', result });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ success: false, error: error.message });
-  }
-}
-
-const vehicleMethods = {
-  getVehicles,
-  addVehicle,
-  deleteVehicle,
-  updateVehicle,
-  addVehiclesInBulk
 };
 
-module.exports = vehicleMethods;
+const updateVehicle = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedVehicle = await Vehicle.findByIdAndUpdate(id, req.body, { new: true });
+
+    if (!updatedVehicle) {
+      return res.status(404).json({ success: false, message: 'Vehicle not found' });
+    }
+
+    res.status(200).json({ success: true, message: 'Vehicle updated successfully', updatedVehicle });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+const deleteVehicle = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedVehicle = await Vehicle.findByIdAndDelete(id);
+
+    if (!deletedVehicle) {
+      return res.status(404).json({ success: false, message: 'Vehicle not found' });
+    }
+
+    res.status(200).json({ success: true, message: 'Vehicle deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getAllVehicles = async (req, res) => {
+  try {
+    const vehicles = await Vehicle.find();
+    res.status(200).json({ success: true, vehicles });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getVehicleById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const vehicle = await Vehicle.findById(id);
+
+    if (!vehicle) {
+      return res.status(404).json({ success: false, message: 'Vehicle not found' });
+    }
+
+    res.status(200).json({ success: true, vehicle });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getNearestVehicle = async (req, res) => {
+  try {
+    const { latitude, longitude, maxDistance = 5000 } = req.query;
+
+    if (!latitude || !longitude) {
+      return res.status(400).json({ success: false, message: 'Latitude and longitude are required' });
+    }
+
+    const nearbyVehicles = await Vehicle.find({
+      "coordinates.coordinates": {
+        $geoWithin: {
+          $centerSphere: [[parseFloat(longitude), parseFloat(latitude)], maxDistance / 6371000] // Earth radius in meters
+        }
+      },
+      availability: true
+    });
+
+    if (!nearbyVehicles.length) {
+      return res.status(200).json({ success: true, vehicles: [], message: "No nearby vehicles found" });
+    }
+
+    // Step 2: Use QuadTree for fast nearest search
+    const quadTree = new QuadTree({
+      x: parseFloat(longitude),
+      y: parseFloat(latitude),
+      width: maxDistance * 2,
+      height: maxDistance * 2
+    });
+
+    nearbyVehicles.forEach(vehicle => {
+      const [lng, lat] = vehicle.coordinates.coordinates;
+      quadTree.insert({ x: lng, y: lat, data: vehicle });
+    });
+
+    const nearest = quadTree.findNearest({ x: parseFloat(longitude), y: parseFloat(latitude) });
+
+    if (!nearest) {
+      return res.status(200).json({ success: true, vehicles: [], message: "No nearby vehicles found" });
+    }
+
+    const result = {
+      success: true,
+      vehicle: nearest.data,
+      googleMapsNavigationUrl: `https://www.google.com/maps/dir/?api=1&destination=${nearest.data.coordinates.coordinates[1]},${nearest.data.coordinates.coordinates[0]}`
+    };
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// 7️⃣ Rent a Vehicle
+const rentVehicle = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
+
+    const vehicle = await Vehicle.findById(id);
+    if (!vehicle || !vehicle.availability) {
+      return res.status(400).json({ success: false, message: 'Vehicle not available' });
+    }
+
+    vehicle.availability = false;
+    vehicle.rentedBy = userId;
+    await vehicle.save();
+
+    res.status(200).json({ success: true, message: 'Vehicle rented successfully', vehicle });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// 8️⃣ Return a Vehicle
+const returnVehicle = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const vehicle = await Vehicle.findById(id);
+    if (!vehicle || vehicle.availability) {
+      return res.status(400).json({ success: false, message: 'Vehicle not currently rented' });
+    }
+
+    vehicle.availability = true;
+    vehicle.rentedBy = null;
+    await vehicle.save();
+
+    res.status(200).json({ success: true, message: 'Vehicle returned successfully', vehicle });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
+
+
+module.exports = { addVehicle, updateVehicle, deleteVehicle, getAllVehicles, getVehicleById, getNearestVehicle, rentVehicle, returnVehicle };
