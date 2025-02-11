@@ -1,6 +1,6 @@
-const express = require('express')
+const express = require('express');
 const orders = express.Router();
-const {getMyOrders, addOrder} = require('./Orders_Methods');
+const { getMyOrders, addOrder } = require('./Orders_Methods');
 
 orders
     .route('/')

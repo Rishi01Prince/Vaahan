@@ -67,6 +67,8 @@ const getVehicleById = async (req, res) => {
   }
 };
 
+
+
 const getNearestVehicle = async (req, res) => {
   try {
     const { latitude, longitude, maxDistance = 5000 } = req.query;
@@ -75,10 +77,11 @@ const getNearestVehicle = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Latitude and longitude are required' });
     }
 
+    // Step 1: Fetch vehicles within maxDistance using MongoDB's geospatial query
     const nearbyVehicles = await Vehicle.find({
       "coordinates.coordinates": {
         $geoWithin: {
-          $centerSphere: [[parseFloat(longitude), parseFloat(latitude)], maxDistance / 6371000] // Earth radius in meters
+          $centerSphere: [[parseFloat(longitude), parseFloat(latitude)], maxDistance / 6371000] // Convert meters to radians
         }
       },
       availability: true
@@ -88,19 +91,21 @@ const getNearestVehicle = async (req, res) => {
       return res.status(200).json({ success: true, vehicles: [], message: "No nearby vehicles found" });
     }
 
-    // Step 2: Use QuadTree for fast nearest search
+    // Step 2: Initialize QuadTree covering a bounding box around the search area
     const quadTree = new QuadTree({
-      x: parseFloat(longitude),
-      y: parseFloat(latitude),
+      x: parseFloat(longitude) - maxDistance, 
+      y: parseFloat(latitude) - maxDistance,
       width: maxDistance * 2,
       height: maxDistance * 2
     });
 
+    // Step 3: Insert all nearby vehicles into QuadTree
     nearbyVehicles.forEach(vehicle => {
       const [lng, lat] = vehicle.coordinates.coordinates;
       quadTree.insert({ x: lng, y: lat, data: vehicle });
     });
 
+    // Step 4: Find the nearest vehicle using QuadTree
     const nearest = quadTree.findNearest({ x: parseFloat(longitude), y: parseFloat(latitude) });
 
     if (!nearest) {

@@ -12,10 +12,10 @@ const VehicleSchema = new mongoose.Schema({
   coordinates: {
     type: { type: String, enum: ['Point'], default: 'Point' },
     coordinates: { type: [Number], required: true }  
-  }
+  },
+  isLocked: { type: Boolean, default: false }  // Prevents concurrent booking
 });
 
 VehicleSchema.index({ coordinates: '2dsphere' });
 
-const Vehicle = mongoose.model('Vehicle', VehicleSchema);
-module.exports = Vehicle;
+module.exports = mongoose.model('Vehicle', VehicleSchema);
