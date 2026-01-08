@@ -36,17 +36,17 @@ export default function ContactUs() {
           <div className="flex flex-col items-center p-6 bg-gray-900 rounded-lg transition-transform hover:scale-105">
             {/* <EnvelopeIcon className="w-12 h-12 text-primary mb-4" /> */}
             <h2 className="text-xl font-semibold mb-2">Email</h2>
-            <p className="text-gray-400 text-center">rishi01prince@gmail.com</p>
+            <p className="text-gray-400 text-center">devanshr903@gmail.com</p>
           </div>
           <div className="flex flex-col items-center p-6 bg-gray-900 rounded-lg transition-transform hover:scale-105">
             <PhoneIcon className="w-12 h-12 text-primary mb-4" />
             <h2 className="text-xl font-semibold mb-2">Phone</h2>
-            <p className="text-gray-400 text-center">+1 (555) 123-4567</p>
+            <p className="text-gray-400 text-center">+91 9307845901</p>
           </div>
           <div className="flex flex-col items-center p-6 bg-gray-900 rounded-lg transition-transform hover:scale-105 md:col-span-2 lg:col-span-1">
             <MapPinIcon className="w-12 h-12 text-primary mb-4" />
             <h2 className="text-xl font-semibold mb-2">Address</h2>
-            <p className="text-gray-400 text-center">123 India , CA 94107</p>
+            <p className="text-gray-400 text-center">Pune, Maharashtra</p>
           </div>
         </div>
 
