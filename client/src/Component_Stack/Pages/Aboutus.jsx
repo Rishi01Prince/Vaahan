@@ -1,4 +1,4 @@
-import rishi from "../../assets/profiles/rishiprofile.png";
+import rishi from "../../assets/profiles/devansh.png";
 import { useContext } from "react";
 import {AuthenticationContext} from "../../Context/Authentication";
 
@@ -7,7 +7,7 @@ export default function AboutUs() {
   
 
   const developer = {
-    name: 'Rishi Raj',
+    name: 'Devansh Rathod',
     role: 'Developer & Manager',
     image: rishi
   }
