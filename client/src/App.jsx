@@ -10,6 +10,7 @@ import Footer from "./Component_Stack/Sections/Footer";
 import Header from "./Component_Stack/Sections/Header";
 import AddVechicle from "./Component_Stack/Pages/AddVehicle";
 import YourVehicles from "./Component_Stack/Pages/YourVehicles";
+import MyCart from "./Component_Stack/Pages/MyCart.jsx";
 import {AuthenticationContextProvider} from "./Context/Authentication.jsx";
 
 import { CartProvider } from './components/ContextReducer';
@@ -26,8 +27,6 @@ import {
 
 
 const App = () => {
-  // const [theme, setTheme] = useState('light');
-
   return (
     <GoogleOAuthProvider clientId={`${import.meta.env.VITE_GOOGLE_CLIENT_ID}`}>
     <CartProvider>
@@ -45,6 +44,7 @@ const App = () => {
             <Route exact path='/rentnow' element={<VehicleGallery />} />
             <Route exact path='/addvehicle' element={<AddVechicle />} />
             <Route exact path='/yourvehicles' element={<YourVehicles />} />
+            <Route exact path='/mycart' element={<MyCart/>} />
           </Routes>
         </main>
         <Footer />
